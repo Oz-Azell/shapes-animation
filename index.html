@@ -3,24 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <title>Animated Shapes Gallery</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
 
     body {
       margin: 0;
-      padding: 30px;
+      padding: 20px;
       background: #0b0c10;
       font-family: 'Orbitron', sans-serif;
       color: #00ffff;
-      display: flex;
-      flex-wrap: wrap;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
       justify-content: center;
-      gap: 30px;
+      align-items: start;
     }
 
     .shape-box {
-      width: 30%;
-      min-width: 250px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -29,7 +32,7 @@
     canvas {
       width: 100%;
       aspect-ratio: 1 / 1;
-      background: #000000;
+      background: #000;
       border-radius: 12px;
       border: 2px solid #00ffff44;
     }
@@ -38,21 +41,33 @@
       margin: 10px 0 15px;
       text-align: center;
       color: #00ffff;
+      font-size: 1.1rem;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+      h2 {
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="shape-box"><h2>Cube 3D</h2><canvas id="cube3d"></canvas></div>
-  <div class="shape-box"><h2>Cube 4D</h2><canvas id="cube4d"></canvas></div>
-  <div class="shape-box"><h2>Ball 3D</h2><canvas id="ball3d"></canvas></div>
-  <div class="shape-box"><h2>Pyramid</h2><canvas id="pyramid"></canvas></div>
-  <div class="shape-box"><h2>Torus</h2><canvas id="torus"></canvas></div>
-  <div class="shape-box"><h2>Cylinder</h2><canvas id="cylinder"></canvas></div>
-  <div class="shape-box"><h2>Octahedron</h2><canvas id="octahedron"></canvas></div>
-  <div class="shape-box"><h2>Icosahedron</h2><canvas id="icosahedron"></canvas></div>
+  <div class="grid">
+    <div class="shape-box"><h2>Cube 3D</h2><canvas id="cube3d"></canvas></div>
+    <div class="shape-box"><h2>Cube 4D</h2><canvas id="cube4d"></canvas></div>
+    <div class="shape-box"><h2>Ball 3D</h2><canvas id="ball3d"></canvas></div>
+    <div class="shape-box"><h2>Pyramid</h2><canvas id="pyramid"></canvas></div>
+    <div class="shape-box"><h2>Torus</h2><canvas id="torus"></canvas></div>
+    <div class="shape-box"><h2>Cylinder</h2><canvas id="cylinder"></canvas></div>
+    <div class="shape-box"><h2>Octahedron</h2><canvas id="octahedron"></canvas></div>
+    <div class="shape-box"><h2>Icosahedron</h2><canvas id="icosahedron"></canvas></div>
+  </div>
 
-  <!-- Load Three.js -->
+  <!-- Three.js -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 
   <script>
@@ -91,7 +106,7 @@
     renderShape('octahedron', new THREE.OctahedronGeometry(1));
     renderShape('icosahedron', new THREE.IcosahedronGeometry(1));
 
-    // Cube 4D (Tesseract) with animated rotation & neon glow
+    // Cube 4D
     {
       const canvas = document.getElementById('cube4d');
       const ctx = canvas.getContext('2d');
@@ -124,22 +139,17 @@
 
       function rotate4D(p, angle) {
         let [x, y, z, w] = p;
-
-        // Multi-plane 4D rotation
         let xw = Math.cos(angle * 0.8) * x - Math.sin(angle * 0.8) * w;
         let ww1 = Math.sin(angle * 0.8) * x + Math.cos(angle * 0.8) * w;
-
         let yy = Math.cos(angle * 0.6) * y - Math.sin(angle * 0.6) * z;
         let zz = Math.sin(angle * 0.6) * y + Math.cos(angle * 0.6) * z;
-
         let zw = Math.cos(angle) * zz - Math.sin(angle) * ww1;
         let ww2 = Math.sin(angle) * zz + Math.cos(angle) * ww1;
-
         return [xw, yy, zw, ww2];
       }
 
       function draw() {
-        ctx.fillStyle = "#000"; // Black background
+        ctx.fillStyle = "#000";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         const points = vertices.map(v => rotate4D(v, angle)).map(project);
@@ -171,6 +181,5 @@
       draw();
     }
   </script>
-  <script src="three.min.js"></script>
 </body>
 </html>
